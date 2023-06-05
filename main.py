@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 app= FastAPI()
 
-ilist={}
+itemlist={}
 
 class Item(BaseModel):
     id:str
@@ -12,46 +12,46 @@ class Item(BaseModel):
     description:str
 
 #Create an item
-@app.post("/items/{id}")
-def createfunct(item:Item):
+@app.post("/itemlist/")
+def createItem(item:Item):
                 id= item.id
-                if id in ilist:
+                if id in itemlist:
                     raise HTTPException(status_code=400,
                                 detail=f'The item {id} already exists')
                 else:
-                    ilist[id] = item.dict()
-                    return{'message': f'Item {id} successfully added'}         
+                    itemlist[id] = item.dict()
+                    return{'message': f'Item {id} successfully added!'}         
 #Give the whole list
-@app.get("/items/")
-def listfunct():
-    return(ilist)
+@app.get("/itemlist/")
+def listAllItems():
+    return(itemlist)
 
 #Get item by id
-@app.get('/ilist/{id}')
-def findfunct(id:str):
-        if id in ilist:
-              return ilist[id]
+@app.get('/itemlist/{id}')
+def searchByID(id:str):
+        if id in itemlist:
+              return itemlist[id]
         else:
             raise HTTPException(status_code=400,
                                 detail=f'There is no item by the id: {id}') 
              
 #Delete by id
-@app.delete("/ilist/{id}")
-def delfunct(id:str):
-        if id not in ilist:
+@app.delete("/itemlist/{id}")
+def deleteItem(id:str):
+        if id not in itemlist:
               raise HTTPException(status_code=400,
                              detail=f'There is no item by the id: {id}')
         else:
-               del ilist[id]
-               return{'message': f'Item {id} successfully deleted'}
+               del itemlist[id]
+               return{'message': f'Item {id} successfully deleted!'}
 
 #Update
-@app.put("/ilist/{id}")
-def upfunct(item:Item):
-        id= item.id
-        if id in ilist:
-            ilist[id]=item.dict()
-            return{'message': f'Item {id} successfully updated'}
+@app.put("/itemlist/{id}")
+def updateItem():
+        id=item.id
+        if id in itemlist:
+            itemlist[id]=item.dict()
+            return itemlist
         else:
             raise HTTPException(status_code=400,
-                                detail=f'The item {id} does not exist')
+                                detail=f'The item {item.id} does not exist')
