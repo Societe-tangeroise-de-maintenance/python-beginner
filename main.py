@@ -56,7 +56,7 @@ def deleteItem(id:int):
 def updateItem(id:int, item:updateditem):
         if id not in itemlist:
                raise HTTPException(status_code=400,
-                                detail=f'The item {item.id} does not exist')
+                                detail=f'The item {id} does not exist')
         else:
              if item.name!=None:
                 itemlist[id]["name"]=item.name
