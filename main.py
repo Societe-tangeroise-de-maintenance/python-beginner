@@ -7,7 +7,7 @@ app= FastAPI()
 itemlist={}
 
 class Item(BaseModel):
-    id:str
+    id:int
     name:str
     price:float
     description:str
@@ -34,7 +34,7 @@ def listAllItems():
 
 #Get item by id
 @app.get('/itemlist/{id}')
-def searchByID(id:str):
+def searchByID(id:int):
         if id in itemlist:
               return itemlist[id]
         else:
@@ -43,7 +43,7 @@ def searchByID(id:str):
              
 #Delete by id
 @app.delete("/itemlist/{id}")
-def deleteItem(id:str):
+def deleteItem(id:int):
         if id not in itemlist:
               raise HTTPException(status_code=400,
                              detail=f'There is no item by the id: {id}')
@@ -53,16 +53,15 @@ def deleteItem(id:str):
 
 #Update
 @app.put("/itemlist/{id}")
-def updateItem(id:str, item:updateditem):
+def updateItem(id:int, item:updateditem):
         if id not in itemlist:
                raise HTTPException(status_code=400,
                                 detail=f'The item {item.id} does not exist')
         else:
              if item.name!=None:
-                itemlist[id].name=item.name
+                itemlist[id]["name"]=item.name
              if item.price!=None:
-                 itemlist[id].price=item.price
+                 itemlist[id]["price"]=item.price
              if item.description!=None:
-                itemlist[id].description=item.description
-             return itemlist[id]
-           
+                itemlist[id]["description"]=item.description
+             return {'message': f'Item {id} successfully updated!'}
