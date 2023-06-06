@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from typing import Optional
 from pydantic import BaseModel
 
 app= FastAPI()
@@ -10,6 +11,11 @@ class Item(BaseModel):
     name:str
     price:float
     description:str
+
+class updateditem(BaseModel):
+    name: Optional[str]= None
+    price:Optional[float]=None
+    description:Optional[str]= None
 
 #Create an item
 @app.post("/itemlist/")
@@ -47,11 +53,16 @@ def deleteItem(id:str):
 
 #Update
 @app.put("/itemlist/{id}")
-def updateItem(updateditem:Item):
-        id= updateditem.id
-        if id in itemlist:
-            itemlist[id]=updateditem.dict()
-            return{'message': f'Item {id} successfully updated!'}
-        else:
-            raise HTTPException(status_code=400,
+def updateItem(id:str, item:updateditem):
+        if id not in itemlist:
+               raise HTTPException(status_code=400,
                                 detail=f'The item {item.id} does not exist')
+        else:
+             if item.name!=None:
+                itemlist[id].name=item.name
+             if item.price!=None:
+                 itemlist[id].price=item.price
+             if item.description!=None:
+                itemlist[id].description=item.description
+             return itemlist[id]
+           
