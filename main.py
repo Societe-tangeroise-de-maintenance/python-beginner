@@ -47,11 +47,11 @@ def deleteItem(id:str):
 
 #Update
 @app.put("/itemlist/{id}")
-def updateItem():
-        id=item.id
+def updateItem(updateditem:Item):
+        id= updateditem.id
         if id in itemlist:
-            itemlist[id]=item.dict()
-            return itemlist
+            itemlist[id]=updateditem.dict()
+            return{'message': f'Item {id} successfully updated!'}
         else:
             raise HTTPException(status_code=400,
                                 detail=f'The item {item.id} does not exist')
